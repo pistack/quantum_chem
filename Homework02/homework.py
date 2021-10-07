@@ -11,83 +11,9 @@ y = np.arange(0-grid_space, 1+grid_space, grid_space)
 ny = y.shape[0]
 
 # Define Kinetic Operator T
-row_T = np.zeros(0, dtype=int)
-col_T = np.zeros(0, dtype=int)
-data_T = np.zeros(0)
-
-for i in range(1, nx-1):
-    for j in range(1, ny-1):
-        row_T = np.concatenate((row_T, (i*ny+j)*np.ones(5, dtype=int)))
-        tmp = np.array([(i-1)*ny+j, i*ny+(j-1),
-                        i*ny+j, (i+1)*ny+j, i*ny+(j+1)], dtype=int)
-        col_T = np.concatenate((col_T, tmp))
-        data_T = np.concatenate((data_T, np.array([1, 1, -4, 1, 1])))
-
-# Now deal with edge case
-# missing two (0, ny-1), (nx-1, 0)
-# (0, 0), (nx-1, ny-1), 
-# (0, j) ( 1 < j < ny-2)
-# (i, 0) ( 1 < i < nx-2)
-# (i, ny-1) ( 1 < i < nx-2)
-# (nx-1, j) ( 1 < j < ny-2)
-
-# (0, 0)
-row_T = np.concatenate((row_T, np.zeros(3, dtype=int)))
-col_T = np.concatenate((col_T, np.array([0, ny, 1], dtype=int)))
-data_T = np.concatenate((data_T, np.array([-4, 1, 1])))
-
-
-# (0, ny-1)
-row_T = np.concatenate((row_T, (ny-1)*np.ones(3, dtype=int)))
-col_T = np.concatenate((col_T, np.array([ny-2, ny-1, 2*ny-1], dtype=int)))
-data_T = np.concatenate((data_T, np.array([1, -4, 1])))
-
-# (nx-1, 0)
-row_T = np.concatenate((row_T, ((nx-1)*ny)*np.ones(3, dtype=int)))
-col_T = np.concatenate((col_T, np.array([(nx-2)*ny,
-                                         (nx-1)*ny, (nx-1)*ny+1],
-                                        dtype=int)))
-data_T = np.concatenate((data_T, np.array([1, -4, 1])))
-
-
-# (nx-1, ny-1)
-row_T = np.concatenate((row_T, (nx*ny-1)*np.ones(3, dtype=int)))
-col_T = np.concatenate((col_T, np.array([(nx-2)*ny+ny-1,
-                                         (nx-1)*ny+ny-2, (nx-1)*ny+ny-1],
-                                        dtype=int)))
-data_T = np.concatenate((data_T, np.array([1, 1, -4])))
-
-
-# (0, j), (nx-1, j)
-for j in range(1, ny-1):
-    # (0, j)
-    row_T = np.concatenate((row_T, j*np.ones(4, dtype=int)))
-    tmp = np.array([j-1, j, ny+j, j+1], dtype=int)
-    col_T = np.concatenate((col_T, tmp))
-    data_T = np.concatenate((data_T, np.array([1, -4, 1, 1])))
-    # (nx-1, j)
-    row_T = np.concatenate((row_T, ((nx-1)*ny+j)*np.ones(4, dtype=int)))
-    tmp = np.array([(nx-2)*ny+j, (nx-1)*ny+(j-1),
-                    (nx-1)*ny+j, (nx-1)*ny+(j+1)], dtype=int)
-    col_T = np.concatenate((col_T, tmp))
-    data_T = np.concatenate((data_T, np.array([1, 1, -4, 1])))
-
-# (i, 0), (i, ny-1)
-for i in range(1, nx-1):
-    # (i, 0)
-    row_T = np.concatenate((row_T, i*ny*np.ones(4, dtype=int)))
-    tmp = np.array([(i-1)*ny, i*ny, (i+1)*ny, i*ny+1], dtype=int)
-    col_T = np.concatenate((col_T, tmp))
-    data_T = np.concatenate((data_T, np.array([1, -4, 1, 1])))
-    # (i, ny-1)
-    row_T = np.concatenate((row_T, (i*ny+ny-1)*np.ones(4, dtype=int)))
-    tmp = np.array([(i-1)*ny+ny-1, i*ny+ny-2,
-                    i*ny+ny-1, (i+1)*ny+ny-1], dtype=int)
-    col_T = np.concatenate((col_T, tmp))
-    data_T = np.concatenate((data_T, np.array([1, 1, -4, 1])))
-
-data_T = -0.5/(grid_space**2)*data_T
-T = sparse.csc_matrix((data_T, (row_T, col_T)), shape=(nx*ny, nx*ny))
+T = sparse.diags(np.array([1, 1, -4, 1, 1]), np.array([-ny, -1, 0, 1, ny]),
+                 shape=(nx*ny, nx*ny))
+T = -0.5/(grid_space**2)*T
 
 # Define potential operator V
 row_V = np.array([0, nx*ny-1], dtype=int)

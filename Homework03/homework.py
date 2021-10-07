@@ -20,31 +20,10 @@ def make_T_1d(x_min: float, x_max: float,
     '''
 
     num = np.arange(x_min, x_max, grid_space).shape[0]
-    row_T = np.zeros(0, dtype=int)
-    col_T = np.zeros(0, dtype=int)
-    data_T = np.zeros(0, dtype=int)
+    T = sparse.diags(np.array([1, -2, 1]), np.array([-1, 0, 1]),
+                     shape=(num, num))
 
-    # (0, 0)
-    row_T = np.concatenate((row_T, np.zeros(2, dtype=int)))
-    col_T = np.concatenate((col_T, np.array([0, 1], dtype=int)))
-    data_T = np.concatenate((data_T, np.array([-2, 1])))
-
-    for i in range(1, num-1):
-        # (i, 0)
-        row_T = np.concatenate((row_T, i*np.ones(3, dtype=int)))
-        tmp = np.array([(i-1), i, (i+1)], dtype=int)
-        col_T = np.concatenate((col_T, tmp))
-        data_T = np.concatenate((data_T, np.array([1, -2, 1])))
-
-    # (nnum-1, 0)
-    row_T = np.concatenate((row_T, num-1*np.ones(2, dtype=int)))
-    col_T = np.concatenate((col_T, np.array([num-2,
-                                             num-1],
-                                            dtype=int)))
-    data_T = np.concatenate((data_T, np.array([1, -2])))
-
-    data_T = -0.5/(grid_space**2)*data_T
-    T = sparse.csc_matrix((data_T, (row_T, col_T)), shape=(num, num))
+    T = -0.5/(grid_space**2)*T
 
     return T
 
@@ -121,7 +100,7 @@ if __name__ == '__main__':
     # Define domain
     x_min = -10
     x_max = 10
-    grid_space = 0.01
+    grid_space = 0.001
 
     # Define force constant
     k = 40.0
