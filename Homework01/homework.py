@@ -16,45 +16,28 @@ def atom_parse(string):
 
     return atom_lst
 
+
 def print_periodic_table(atom_lst):
     period = [2, 10, 18, 36, 54]
     periodic_table = ''
-
-    num_atom = len(atom_lst)
-
     i = 0
     j = 0
     for a in atom_lst:
         if i < period[j]:
             if period[j] == 2 and i == 0:
-
                 periodic_table = periodic_table + a + '   '*16
-
             elif period[j] in [10, 18] and i == period[j-1]+1:
-
                 periodic_table = periodic_table + ' ' + a + '   '*10
-
             else:
-
                 periodic_table = periodic_table + ' ' + a
-
         else:
-
             periodic_table = periodic_table + '\n' + a
             j = j+1
-
         i = i+1
-
     periodic_table = periodic_table + '\n'*(4-j)
-
     print(periodic_table)
-
     return
 
 
 if __name__ == "__main__":
     print_periodic_table(atom_parse(input("input squeezed element names:\n")))
-                
-            
-        
-        

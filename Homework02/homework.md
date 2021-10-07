@@ -23,7 +23,7 @@ $\lambda=2,8.$
   Eigenvector: $(1,1)^T$
   
 * Eigenvalue: $8$
-  Eigenvector: $(1,5)^T$
+  Eigenvector: $(1,-5)^T$
 
 ## Compare to numpy linalg eig
 
