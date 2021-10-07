@@ -24,7 +24,8 @@ for i in range(1, nx-1):
         data_T = np.concatenate((data_T, np.array([1, 1, -4, 1, 1])))
 
 # Now deal with edge case
-# (0, 0), (nx-1, ny-1),
+# missing two (0, ny-1), (nx-1, 0)
+# (0, 0), (nx-1, ny-1), 
 # (0, j) ( 1 < j < ny-2)
 # (i, 0) ( 1 < i < nx-2)
 # (i, ny-1) ( 1 < i < nx-2)
@@ -34,6 +35,20 @@ for i in range(1, nx-1):
 row_T = np.concatenate((row_T, np.zeros(3, dtype=int)))
 col_T = np.concatenate((col_T, np.array([0, ny, 1], dtype=int)))
 data_T = np.concatenate((data_T, np.array([-4, 1, 1])))
+
+
+# (0, ny-1)
+row_T = np.concatenate((row_T, (ny-1)*np.ones(3, dtype=int)))
+col_T = np.concatenate((col_T, np.array([ny-2, ny-1, 2*ny-1], dtype=int)))
+data_T = np.concatenate((data_T, np.array([1, -4, 1])))
+
+# (nx-1, 0)
+row_T = np.concatenate((row_T, ((nx-1)*ny)*np.ones(3, dtype=int)))
+col_T = np.concatenate((col_T, np.array([(nx-2)*ny,
+                                         (nx-1)*ny, (nx-1)*ny+1],
+                                        dtype=int)))
+data_T = np.concatenate((data_T, np.array([1, -4, 1])))
+
 
 # (nx-1, ny-1)
 row_T = np.concatenate((row_T, (nx*ny-1)*np.ones(3, dtype=int)))
@@ -89,7 +104,7 @@ V = sparse.csc_matrix((data_V, (row_V, row_V)), shape=(nx*ny, nx*ny))
 
 # Because it gets two unphysical eigenvalue 0,
 # we need to get 7 eigenvalues instead of 5
-eigval, psi = sparse_LA.eigs(T+V, k=7, which='SM')
+eigval, psi = sparse_LA.eigsh(T+V, k=7, which='SM')
 eigval = eigval.real
 
 # remove two eigenvalue and eigenvectors corresponding to zero
