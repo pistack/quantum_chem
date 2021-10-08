@@ -108,6 +108,12 @@ if __name__ == '__main__':
     # Define morse potential wall depth
     D = 100.0
 
+    # How many state should be evaluated
+    num_state = 5
+
+    # How many state used for correction term
+    num_corr = 20
+
     # Evaluate kinetic operator T
     T = make_T_1d(x_min, x_max, grid_space)
 
@@ -125,12 +131,12 @@ if __name__ == '__main__':
     # Directly solve with Morse potential
     # With first 5 eigen value
     eigval_morse, eigvec_morse = \
-        sparse_LA.eigsh(T+V_morse, k=5, sigma=0, which='LM')
+        sparse_LA.eigsh(T+V_morse, k=num_state, sigma=0, which='LM')
 
     # First solve with Harmonic potential
     # For 2nd correction term, evaluate 20 eigen value and eigen vector
     eigval_harmonic, eigvec_harmonic = \
-        sparse_LA.eigsh(T+V_harmonic, k=20, sigma=0, which='LM')
+        sparse_LA.eigsh(T+V_harmonic, k=num_corr, sigma=0, which='LM')
 
     # Calculate the correction term
     corr_pot = (diag_morse - diag_harmonic)
@@ -157,7 +163,7 @@ if __name__ == '__main__':
     print(f'Wall depth: {D}')
     print('Eigenvalues')
     print('Direct    \t  Harmonic   \t     +1st \t     +2nd')
-    for i in range(5):
+    for i in range(num_state):
         string = f'{eigval_morse[i]:.5f} \t {eigval_harmonic[i]: .5f} \t'
         string = string + f'{eigval_harmonic[i]+corr_1st[i]: .5f} \t'
         string = string + f'{eigval_harmonic[i]+corr_1st[i]+corr_2nd[i]: .5f}'
