@@ -217,12 +217,12 @@ if __name__ == '__main__':
         print(string)
 
     plt.figure(1)
-    plt.title('Non interacting system: cond pdf')
+    plt.title('Non interacting system: conditional pdf')
     for i in range(len(x_idxs)):
         plt.plot(y, cond_pdf_non_int[:, i], label=f'x={y[x_idxs[i]]:.2f}')
     plt.legend()
     plt.figure(2)
-    plt.title('Interacting system: cond pdf')
+    plt.title('Interacting system: conditional pdf')
     for i in range(len(x_idxs)):
         plt.plot(y, cond_pdf_int[:, i], label=f'x={y[x_idxs[i]]:.2f}')
     plt.legend()
