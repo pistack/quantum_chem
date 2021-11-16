@@ -1,4 +1,5 @@
 from typing import Callable, Union, Tuple
+from time import perf_counter
 import numpy as np
 import scipy.sparse as sparse
 import scipy.sparse.linalg as sparse_LA
@@ -147,6 +148,8 @@ def cond_prob(psi: np.ndarray, x_index: int) -> np.ndarray:
 
 if __name__ == '__main__':
 
+    start = perf_counter()
+
     # Define domain
     p_min = (-2, -2)
     p_max = (2, 2)
@@ -205,6 +208,8 @@ if __name__ == '__main__':
             cond_prob(eigvec_int[:, 0].reshape((n_x, n_y)), 
             x_idxs[i])
 
+    end = perf_counter()
+
     print(f'Grid spacing: {grid_space}')
     print(f'Domain: [{p_min[0]}, {p_max[0]}]^2')
     print(f'Force constant: {k}')
@@ -215,6 +220,7 @@ if __name__ == '__main__':
     for i in range(5):
         string = f'{i+1} \t {eigval_non_int[i]:.5f} \t {eigval_int[i]: .5f} \t'
         print(string)
+    print(f"{end-start:.2f} seconds elapsed")
 
     plt.figure(1)
     plt.title('Non interacting system: conditional pdf')
