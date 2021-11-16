@@ -179,11 +179,11 @@ if __name__ == '__main__':
 
     # Solve non interacting system
     eigval_non_int, eigvec_non_int = \
-        sparse_LA.eigsh(T+V_non_int, k=1, sigma=0, which='LM')
+        sparse_LA.eigsh(T+V_non_int, k=5, sigma=0, which='LM')
     
     # Solve interacting system
     eigval_int, eigvec_int = \
-        sparse_LA.eigsh(T+V_non_int+V_repul, k=1, sigma=0, which='LM')
+        sparse_LA.eigsh(T+V_non_int+V_repul, k=5, sigma=0, which='LM')
     
     # Find conditional pdf
     n_x = int((p_max[0]-p_min[0])/grid_space)+1
@@ -206,9 +206,9 @@ if __name__ == '__main__':
     print(f'Parameter a: {a}')
     print(f'Parameter b: {b}')
     print('Eigenvalues')
-    print('Non interacting   \t  Interacting')
-    for i in range(1):
-        string = f'{eigval_non_int[i]:.5f} \t {eigval_int[i]: .5f} \t'
+    print('Num \t Non interacting   \t  Interacting')
+    for i in range(5):
+        string = f'{i+1} \t {eigval_non_int[i]:.5f} \t {eigval_int[i]: .5f} \t'
         print(string)
 
     plt.figure(1)
