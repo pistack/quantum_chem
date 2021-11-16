@@ -162,7 +162,12 @@ if __name__ == '__main__':
     b = 12
 
     # x index to evaluate conditional pdf
-    x_idxs = [0, 10, 20, 30, 40]
+    x_idxs = [0, # x_min
+    int(1/grid_space), # x_min + 1
+    int(2/grid_space), # x_min + 2 
+    int(3/grid_space), # x_min + 3 
+    int(4/grid_space), # x_min + 4
+    ]
 
 
     # Evaluate kinetic operator T
@@ -185,7 +190,7 @@ if __name__ == '__main__':
     eigval_int, eigvec_int = \
         sparse_LA.eigsh(T+V_non_int+V_repul, k=5, sigma=0, which='LM')
     
-    # Find conditional pdf
+    # Evaluate conditional pdf
     n_x = int((p_max[0]-p_min[0])/grid_space)+1
     n_y = int((p_max[1]-p_min[1])/grid_space)+1
     y = np.arange(p_min[1], p_max[1]+grid_space, grid_space)
