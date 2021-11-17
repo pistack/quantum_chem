@@ -143,10 +143,11 @@ def cond_prob(psi: np.ndarray, grid_space:float,
     Conditional pdf
     '''
     cond_pdf = psi[x_index, :]
+    cond_pdf = cond_pdf ** 2
 
     # P(x) = \int \Psi(x, y) dy = 
-    # grid_space * \sum_i \Psi(x, i*grid_space)
-    # P(y|x) = \Psi(x, y)/P(x)
+    # grid_space * \sum_i |\Psi(x, i*grid_space)|^2
+    # P(y|x) = |\Psi(x, y)|^2/P(x)
 
     cond_pdf = cond_pdf / grid_space / np.sum(cond_pdf)
 
