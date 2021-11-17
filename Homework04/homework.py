@@ -173,11 +173,12 @@ if __name__ == '__main__':
     b = 12
 
     # x index to evaluate conditional pdf
-    x_idxs = [0, # x_min
-    int(1/grid_space), # x_min + 1
-    int(2/grid_space), # x_min + 2 
-    int(3/grid_space), # x_min + 3 
-    int(4/grid_space), # x_min + 4
+    x_idxs = [
+    int(np.floor(2/grid_space+0.5)), # x_min + 2 
+    int(np.floor(2.1/grid_space+0.5)), # x_min + 2.1 
+    int(np.floor(2.3/grid_space+0.5)), # x_min + 2.3
+    int(np.floor(2.9/grid_space+0.5)), # x_min + 2.9 
+    int(np.floor(4/grid_space+0.5)), # x_min + 4
     ]
 
 
