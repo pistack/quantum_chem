@@ -163,7 +163,7 @@ if __name__ == '__main__':
     grid_space = 0.1
 
     # Define force constant
-    k = 40
+    k = 36
 
     # repulsion constant
     a = 8
