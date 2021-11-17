@@ -131,17 +131,24 @@ def make_V2(f: Callable, p_min: Tuple[float, float],
 
     return V
 
-def cond_prob(psi: np.ndarray, x_index: int) -> np.ndarray:
+def cond_prob(psi: np.ndarray, grid_space:float, 
+             x_index: int) -> np.ndarray:
     '''
     Evaluates conditional pdf of given psi at fixed x value
     Args:
     psi: two dimensional wave function
+    grid_space: grid spacing
     x_index: index of x value at which find conditional pdf
     Returns:
     Conditional pdf
     '''
     cond_pdf = psi[x_index, :]
-    cond_pdf = cond_pdf / np.sum(cond_pdf)
+
+    # P(x) = \int \Psi(x, y) dy = 
+    # grid_space * \sum_i \Psi(x, i*grid_space)
+    # P(y|x) = \Psi(x, y)/P(x)
+
+    cond_pdf = cond_pdf / grid_space / np.sum(cond_pdf)
 
     return cond_pdf
 
@@ -202,10 +209,10 @@ if __name__ == '__main__':
     cond_pdf_int = np.zeros((n_y,len(x_idxs))) 
     for i in range(len(x_idxs)):
         cond_pdf_non_int[:, i] = \
-            cond_prob(eigvec_non_int[:, 0].reshape((n_x, n_y)), 
+            cond_prob(eigvec_non_int[:, 0].reshape((n_x, n_y)), grid_space, 
             x_idxs[i])
         cond_pdf_int[:, i] = \
-            cond_prob(eigvec_int[:, 0].reshape((n_x, n_y)), 
+            cond_prob(eigvec_int[:, 0].reshape((n_x, n_y)), grid_space,
             x_idxs[i])
 
     end = perf_counter()
