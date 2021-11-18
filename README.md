@@ -8,3 +8,6 @@ Solve 2d particle in the box problem
 
 ## Homework03
 Parturbation theorem with 1d problem
+
+## Homework04
+Interacting two particle in 1d box problem
