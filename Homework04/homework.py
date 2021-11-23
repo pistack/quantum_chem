@@ -135,6 +135,7 @@ def cond_prob(psi: np.ndarray, grid_space:float,
              x_index: int) -> np.ndarray:
     '''
     Evaluates conditional pdf of given psi at fixed x value
+
     Args:
     psi: two dimensional wave function
     grid_space: grid spacing
