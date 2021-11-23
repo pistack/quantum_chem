@@ -15,3 +15,7 @@ Interacting two particle in 1d box problem
 ## Homework06
 Evaluates bonding energy of Hydrogen molecule
 via pyscf quantum chemistry package.
+
+## Homework07
+Evaluates radial density of molecule
+via pyscf quantum chemistry package.
