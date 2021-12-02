@@ -23,3 +23,10 @@ via pyscf quantum chemistry package.
 ## Homework08
 Calculates density matrix using normal orbital and
 localized orbital. Then verify two density matries are same.
+
+## Homework09
+1. Implement SCF Hartree-Fock Method
+2. Draw potential energy curve of LiH molecule
+3. Evaluates vibrational frequencies using
+   1. Finite difference method
+   2. Harmonic Approximation
