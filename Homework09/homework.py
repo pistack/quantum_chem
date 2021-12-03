@@ -20,7 +20,7 @@ def make_T_1d(x_min: float, x_max: float,
     Kinetic operator matrix with CSC format
     '''
 
-    num = np.arange(x_min, x_max, grid_space).shape[0]
+    num = np.arange(x_min, x_max+grid_space, grid_space).shape[0]
     T = sparse.diags(np.array([1, -2, 1]), np.array([-1, 0, 1]),
                      shape=(num, num))
 
@@ -198,7 +198,8 @@ def uhf_scf(mol,init_guess=None):
 
 if __name__ == "__main__":
     # Draw potential energy surface of LiH linear molecule
-    dist = np.arange(2, 6.1, 0.1) # (unit bohr)
+    grid_space = 0.01 # (unit bohr)
+    dist = np.arange(2, 6+grid_space, grid_space) # (unit bohr)
     ang_to_bohr = 1.8897259886
     au_to_invcm = 2.1947*10**5
     energies_rhf = np.zeros_like(dist)
@@ -213,17 +214,20 @@ if __name__ == "__main__":
             = uhf_scf(LiH)
     
     # Evaluate nuclear eigenvalue via finite difference method
-    T = make_T_1d(2, 6.1, 0.1)
-    mu = 7./8.*1822.89
+    T = make_T_1d(2, 6, grid_space)
+    mu = 1.008*6.941/7.949*1822.89
     T = T/mu
     V_rhf = sparse.diags(energies_rhf-np.min(energies_rhf), 
     shape=T.shape)
     V_uhf = sparse.diags(energies_uhf-np.min(energies_uhf), 
     shape=T.shape)
-    eigval_rhf, _ = sparse_LA.eigsh(T+V_rhf, k=10, which='SM')
-    eigval_uhf, _ = sparse_LA.eigsh(T+V_uhf, k=10, which='SM')
+    eigval_rhf, _ = sparse_LA.eigsh(T+V_rhf, k=10, 
+    sigma=0, which='LM')
+    eigval_uhf, _ = sparse_LA.eigsh(T+V_uhf, k=10, sigma=0, 
+    which='LM')
     fdm_rhf = au_to_invcm*eigval_rhf
     fdm_uhf = au_to_invcm*eigval_uhf
+
     # Harmonic approximation
     # E_v = (v+1/2)hbar*w
     # E_v = (v+1/2)hbar*sqrt(k/mu)
@@ -234,9 +238,9 @@ if __name__ == "__main__":
     min_idx_rhf = np.argmin(energies_rhf)
     min_idx_uhf = np.argmin(energies_uhf) 
     k_rhf = (energies_rhf[min_idx_rhf-1]+
-    energies_rhf[min_idx_rhf+1]-2*energies_rhf[min_idx_rhf])/0.01
+    energies_rhf[min_idx_rhf+1]-2*energies_rhf[min_idx_rhf])/grid_space**2
     k_uhf = (energies_rhf[min_idx_uhf-1]+
-    energies_rhf[min_idx_uhf+1]-2*energies_rhf[min_idx_uhf])/0.01
+    energies_rhf[min_idx_uhf+1]-2*energies_rhf[min_idx_uhf])/grid_space**2
     wave_rhf = np.sqrt(k_rhf/mu)*au_to_invcm
     wave_uhf = np.sqrt(k_uhf/mu)*au_to_invcm
 
