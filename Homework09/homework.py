@@ -197,7 +197,7 @@ def uhf_scf(mol,init_guess=None):
     S_contam = Nocc_beta - np.sum(np.sum(
         np.abs(
             np.transpose(np.conj(Cp_beta[:, :Nocc_beta])) 
-            @ S @ Cp_alpha[:, :Nocc_alpha])
+            @ S @ Cp_alpha[:, :Nocc_alpha])**2
     ))
     return Ep+EN, S_contam, ep, Cp, Nocc
 
