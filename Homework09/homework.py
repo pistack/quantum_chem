@@ -194,7 +194,12 @@ def uhf_scf(mol,init_guess=None):
     Cp[1,:,:] = Cp_beta
     Nocc[0] = Nocc_alpha
     Nocc[1] = Nocc_beta
-    return Ep+EN, ep, Cp, Nocc
+    S_contam = Nocc_beta - np.sum(np.sum(
+        np.abs(
+            np.transpose(np.conj(Cp_beta[:, :Nocc_beta])) 
+            @ S @ Cp_alpha[:, :Nocc_alpha])
+    ))
+    return Ep+EN, S_contam, ep, Cp, Nocc
 
 if __name__ == "__main__":
     # Draw potential energy surface of LiH linear molecule
@@ -210,7 +215,7 @@ if __name__ == "__main__":
         charge=0, spin=0, basis='6-31g', verbose=0)
         energies_rhf[i], orb_energy, mo_coeff, num_occ \
             = rhf_scf(LiH)
-        energies_uhf[i], orb_energy, mo_coeff, num_occ \
+        energies_uhf[i], S_contam, orb_energy, mo_coeff, num_occ \
             = uhf_scf(LiH)
     
     # Evaluate nuclear eigenvalue via finite difference method
@@ -239,8 +244,8 @@ if __name__ == "__main__":
     min_idx_uhf = np.argmin(energies_uhf) 
     k_rhf = (energies_rhf[min_idx_rhf-1]+
     energies_rhf[min_idx_rhf+1]-2*energies_rhf[min_idx_rhf])/grid_space**2
-    k_uhf = (energies_rhf[min_idx_uhf-1]+
-    energies_rhf[min_idx_uhf+1]-2*energies_rhf[min_idx_uhf])/grid_space**2
+    k_uhf = (energies_uhf[min_idx_uhf-1]+
+    energies_uhf[min_idx_uhf+1]-2*energies_uhf[min_idx_uhf])/grid_space**2
     wave_rhf = np.sqrt(k_rhf/mu)*au_to_invcm
     wave_uhf = np.sqrt(k_uhf/mu)*au_to_invcm
 
